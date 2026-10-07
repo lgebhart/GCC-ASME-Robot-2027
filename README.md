@@ -1,42 +1,96 @@
-# GCC ASME Robot 2027
+GCC ASME Robot 2027
 
-C++ control software and project documentation for the Germanna Community College
-ASME 2027 competition robot.
+Python control software and technical documentation for the Germanna Community College ASME 2027 competition robot.
 
-## Project Goals
+Project Overview
 
-- Develop controller input handling in C++
-- Implement movement and robot functions
-- Document robot design and competition requirements
-- Track development throughout the project
+This project focuses on developing the software used to control and automate the GCC ASME competition robot. Development includes controller-based operation, robot movement and mechanisms, sensor integration, and computer-vision-assisted autonomous behavior.
 
-## Repository Structure
+Project Goals
 
-- `src/` - C++ source code
-- `docs/` - Competition rules and project notes
-- `images/` - Robot diagrams and reference images
+Develop controller input handling in Python
 
-## Current Development
+Implement robot movement and mechanism controls
 
-The current program is being developed around an Xbox One controller.
+Integrate sensors and hardware interfaces
 
-Initial work includes detecting controller inputs such as:
+Develop autonomous navigation and obstacle-detection logic
 
-- A
-- B
-- X
-- Y
-- Left bumper
-- Right bumper
-- Additional controls as development progresses
+Explore computer vision using OpenCV
 
-## Tools
+Use NumPy for calculations and sensor/vision data processing
 
-- C++
-- GitHub
-- Xbox One controller
-- GCC ASME Robot Platform
+Document software development, robot design, and competition requirements
 
-## Status
+Maintain collaborative development through Git and GitHub
 
-Work in progress — 2027 ASME competition robot.
+Repository Structure
+
+src/ - Main Python source code
+
+notebooks/ - Jupyter notebooks for testing, calculations, and experimentation
+
+tests/ - Software testing and development files
+
+docs/ - Competition rules, technical notes, and project documentation
+
+images/ - Robot diagrams and reference images
+
+Current Development
+
+Current development is focused on establishing the robot's Python control system and controller input handling.
+
+Initial controller support includes detecting inputs from an Xbox One controller, including:
+
+A
+
+B
+
+X
+
+Y
+
+Left bumper
+
+Right bumper
+
+Additional buttons, triggers, and analog controls as development progresses
+
+Future development will expand into robot movement, sensor integration, autonomous navigation, and computer vision.
+
+Technologies
+
+Python
+
+NumPy
+
+OpenCV
+
+Jupyter
+
+Visual Studio Code
+
+Git
+
+GitHub
+
+Xbox One Controller
+
+GCC ASME Robot Platform
+
+Development Environment
+
+The project is being developed primarily in Visual Studio Code using a Python virtual environment.
+
+Core Python dependencies include:
+
+numpy
+opencv-python
+
+Additional hardware-specific libraries will be added as development progresses.
+
+Status
+
+Work in Progress
+
+Development is ongoing for the Germanna Community College ASME 2027 competition robot.
