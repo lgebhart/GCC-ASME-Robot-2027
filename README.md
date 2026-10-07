@@ -1,4 +1,10 @@
-GCC ASME Robot 2027
+# GCC ASME Robot 2027
+
+![Python](https://img.shields.io/badge/Python-3.x-blue)
+![OpenCV](https://img.shields.io/badge/OpenCV-Computer%20Vision-green)
+![NumPy](https://img.shields.io/badge/NumPy-Numerical%20Computing-blue)
+![Project](https://img.shields.io/badge/GCC-ASME%20Robot%202027-orange)
+![Status](https://img.shields.io/badge/Status-In%20Development-yellow)
 
 Python control software and technical documentation for the Germanna Community College ASME 2027 competition robot.
 
