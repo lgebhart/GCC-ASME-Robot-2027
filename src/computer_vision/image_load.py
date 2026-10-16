@@ -11,17 +11,20 @@ image_path = Path(__file__).parent / "assets" / "tesseract.jpg"
 img = cv2.imread(str(image_path), 1)
 # Resize image by pixels
 img = cv2.resize(img, (400, 400))
-# Can use this for scaling:
+
+### <<< CAN USE THIS FOR SCALING: >>> ###
 # img = cv2.resize(img, (0, 0), fx=0.5, fy=0.5)
-# Can use this for rotating:
+
+### <<< CAN USE THIS FOR ROTATION: >>> ###
 # img = cv2.rotate(img, cv2.cv2.ROTATE_90_COUNTERCLOCKWISE)
 
 # Verify successful image load
 if img is None:
     print("Failed to load image:", image_path)
 else:
-    # Can use this to save image to new file:
+    ### <<< CAN USE THIS TO SAVE IMAGE TO NEW FILE: >>> ###
     # cv2.imwrite('new_img.jpg', img)
+    
     cv2.imshow('Image', img)
     # Displays image; waits until key pressed
     cv2.waitKey(0)
