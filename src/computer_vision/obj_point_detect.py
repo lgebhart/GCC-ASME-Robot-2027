@@ -35,18 +35,15 @@ beanbag_template = cv2.resize(beanbag_template, (0, 0), fx=0.9, fy=0.9)
 beanbag_h, beanbag_w = beanbag_template.shape[:2]
 
 ### PENCIL TEMPLATE ###
-
 pencil_template = cv2.imread(str(pencil_path), cv2.IMREAD_COLOR)
 
 if pencil_template is None:
     raise FileNotFoundError(f"Could not load template: {pencil_path}")
 
 pencil_template = cv2.resize(pencil_template, (0, 0),fx=0.80,fy=0.80)
-
 pencil_h, pencil_w = pencil_template.shape[:2]
 
 ### <<< USE WEBCAM >>> ###
-
 if use_webcam:
 
     # Open webcam
@@ -57,7 +54,6 @@ if use_webcam:
         raise RuntimeError("Could not open webcam")
 
 ### <<< USE IMAGE >>> ###
-
 else:
 
     # Load obstacle course image
@@ -70,7 +66,6 @@ else:
 while True:
 
     ### <<< WEBCAM FRAME >>> ###
-
     if use_webcam:
 
         # Read frame from webcam
@@ -81,10 +76,9 @@ while True:
             break
 
     # Resize image
-    img = cv2.resize(img, (0, 0), fx=0.70, fy=0.70)
+    img = cv2.resize(img, (0, 0), fx=0.75, fy=0.75)
 
      ### <<< BEANBAG DETECTION >>> ###
-
     beanbag_result = cv2.matchTemplate(
         img,
         beanbag_template,
@@ -92,9 +86,7 @@ while True:
     )
 
     beanbag_min_val, beanbag_max_val, beanbag_min_loc, beanbag_max_loc = cv2.minMaxLoc(beanbag_result)
-
     print("Beanbag confidence:", beanbag_max_val)
-
     beanbag_detected = beanbag_max_val >= 0.50
 
     if beanbag_detected:
@@ -105,7 +97,6 @@ while True:
         cv2.rectangle(img, beanbag_location, beanbag_bottom_right, (0, 255, 0), 5)
 
     ### <<< PENCIL DETECTION >>> ###
-
     pencil_result = cv2.matchTemplate(
         img,
         pencil_template,
@@ -113,9 +104,7 @@ while True:
     )
 
     pencil_min_val, pencil_max_val, pencil_min_loc, pencil_max_loc = cv2.minMaxLoc(pencil_result)
-
     print("Pencil confidence:", pencil_max_val)
-
     pencil_detected = pencil_max_val >= 0.70
 
     if pencil_detected:
@@ -144,20 +133,20 @@ while True:
 
             # Skip corner points inside beanbag box
             if beanbag_detected:
-                 if (
+                if  (
                     beanbag_location[0] <= x <= beanbag_bottom_right[0]
                     and
                     beanbag_location[1] <= y <= beanbag_bottom_right[1]
-                ):
+                    ):
                     continue
 
             # Skip pencil area
             if pencil_detected:
-                if (
+                if  (
                     pencil_location[0] <= x <= pencil_bottom_right[0]
                     and
                     pencil_location[1] <= y <= pencil_bottom_right[1]
-                ):
+                    ):
                     continue
 
             cv2.circle(img, (x, y), 5, (255, 0, 0), -1)
@@ -201,7 +190,6 @@ while True:
 
                     # Skip lines connected to pencil
                     if pencil_detected:
-
                         point1_in_pencil = (
                             pencil_location[0] <= x1 <= pencil_bottom_right[0]
                             and
@@ -217,13 +205,7 @@ while True:
                         if point1_in_pencil or point2_in_pencil:
                             continue
 
-                    cv2.line(
-                        img,
-                        (x1, y1),
-                        (x2, y2),
-                        (0, 0, 255),
-                        2
-                    )
+                    cv2.line(img, (x1, y1), (x2, y2), (0, 0, 255), 2)
 
         # Create blank avoidance mask
         avoidance_mask = np.zeros_like(gray)
@@ -237,20 +219,16 @@ while True:
 
             # Skip beanbag area
             if beanbag_detected:
-                if (
-                    beanbag_location[0] <= x <= beanbag_bottom_right[0]
+                if (beanbag_location[0] <= x <= beanbag_bottom_right[0]
                     and
-                    beanbag_location[1] <= y <= beanbag_bottom_right[1]
-                ):
+                    beanbag_location[1] <= y <= beanbag_bottom_right[1]):
                     continue
 
             # Skip pencil area
             if pencil_detected:
-                if (
-                    pencil_location[0] <= x <= pencil_bottom_right[0]
+                if (pencil_location[0] <= x <= pencil_bottom_right[0]
                     and
-                    pencil_location[1] <= y <= pencil_bottom_right[1]
-                ):
+                    pencil_location[1] <= y <= pencil_bottom_right[1]):
                     continue
 
             cv2.circle(img, (x, y), 4, (0, 0, 255), -1)
@@ -259,7 +237,6 @@ while True:
     cv2.imshow('Frame', img)
 
     ### <<< WEBCAM CONTROLS >>> ###
-
     if use_webcam:
 
         # Press Q to quit
@@ -267,7 +244,6 @@ while True:
             break
 
     ### <<< IMAGE CONTROLS >>> ###
-
     else:
 
         # Wait for key press
