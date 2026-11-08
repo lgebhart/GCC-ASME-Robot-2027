@@ -10,10 +10,10 @@ base_path = Path(__file__).parent
 assets_path = base_path / "assets"
 
 # Path to beanbag template
-beanbag_path = assets_path / "beanbag.png"
+beanbag_path = assets_path / "Beanbag.PNG"
 
 # Path to pencil template
-pencil_path = assets_path / "pencil.png"
+pencil_path = assets_path / "Pencil.PNG"
 
 ### BEANBAG TEMPLATE ###
 beanbag_template = cv2.imread(str(beanbag_path), cv2.IMREAD_COLOR)
