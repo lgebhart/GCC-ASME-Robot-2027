@@ -9,12 +9,6 @@ import cv2
 base_path = Path(__file__).parent
 assets_path = base_path / "assets"
 
-# Choose webcam or image
-use_webcam = False
-
-# Path to obstacle course image
-image_path = assets_path / "Obstacle_Course.png"
-
 # Path to beanbag template
 beanbag_path = assets_path / "beanbag.png"
 
@@ -40,45 +34,39 @@ pencil_template = cv2.imread(str(pencil_path), cv2.IMREAD_COLOR)
 if pencil_template is None:
     raise FileNotFoundError(f"Could not load template: {pencil_path}")
 
-pencil_template = cv2.resize(pencil_template, (0, 0),fx=0.80,fy=0.80)
+pencil_template = cv2.resize(pencil_template, (0, 0), fx=0.80, fy=0.80)
 pencil_h, pencil_w = pencil_template.shape[:2]
 
-### <<< USE WEBCAM >>> ###
-if use_webcam:
+# Open the Jetson CSI camera
+pipeline = (
+    "nvarguscamerasrc sensor-id=0 ! "
+    "video/x-raw(memory:NVMM), width=(int)1920, height=(int)1080, "
+    "format=(string)NV12, framerate=(fraction)30/1 ! "
+    "nvvidconv ! "
+    "video/x-raw, format=(string)BGRx ! "
+    "videoconvert ! "
+    "video/x-raw, format=(string)BGR ! "
+    "appsink drop=true max-buffers=1 sync=false"
+)
 
-    # Open webcam
-    cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(pipeline, cv2.CAP_GSTREAMER)
 
-    # Verify webcam opened
-    if not cap.isOpened():
-        raise RuntimeError("Could not open webcam")
-
-### <<< USE IMAGE >>> ###
-else:
-
-    # Load obstacle course image
-    img = cv2.imread(str(image_path), cv2.IMREAD_COLOR)
-
-    # Verify successful loading
-    if img is None:
-        raise FileNotFoundError(f"Could not load image: {image_path}")
+if not cap.isOpened():
+    raise RuntimeError("Could not open the Jetson CSI camera")
 
 while True:
 
-    ### <<< WEBCAM FRAME >>> ###
-    if use_webcam:
+    # Read frame from Jetson CSI camera
+    ret, img = cap.read()
 
-        # Read frame from webcam
-        ret, img = cap.read()
-
-        if not ret:
-            print("Could not read frame")
-            break
+    if not ret:
+        print("Could not read camera frame")
+        break
 
     # Resize image
     img = cv2.resize(img, (0, 0), fx=0.75, fy=0.75)
 
-     ### <<< BEANBAG DETECTION >>> ###
+    ### <<< BEANBAG DETECTION >>> ###
     beanbag_result = cv2.matchTemplate(
         img,
         beanbag_template,
@@ -91,7 +79,10 @@ while True:
 
     if beanbag_detected:
         beanbag_location = beanbag_max_loc
-        beanbag_bottom_right = (beanbag_location[0] + beanbag_w, beanbag_location[1] + beanbag_h)
+        beanbag_bottom_right = (
+            beanbag_location[0] + beanbag_w,
+            beanbag_location[1] + beanbag_h
+        )
 
         # Draw green rectangle around beanbag
         cv2.rectangle(img, beanbag_location, beanbag_bottom_right, (0, 255, 0), 5)
@@ -109,7 +100,10 @@ while True:
 
     if pencil_detected:
         pencil_location = pencil_max_loc
-        pencil_bottom_right = (pencil_location[0] + pencil_w, pencil_location[1] + pencil_h)
+        pencil_bottom_right = (
+            pencil_location[0] + pencil_w,
+            pencil_location[1] + pencil_h
+        )
 
         # Draw green rectangle around pencil
         cv2.rectangle(img, pencil_location, pencil_bottom_right, (0, 255, 0), 5)
@@ -120,7 +114,18 @@ while True:
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
     # Corner detection algorithm by image, num corners, min quality, and min euclidean distance
-    corners = cv2.goodFeaturesToTrack(gray, 1000, 0.0001, 10)
+    corners = cv2.goodFeaturesToTrack(
+        gray,
+        maxCorners=300,
+        qualityLevel=0.01,
+        minDistance=10
+    )
+
+    # Create blank avoidance mask
+    avoidance_mask = np.zeros_like(gray)
+
+    # Adjustable avoidance radius
+    avoidance_radius = 10
 
     # Only process if corners are detected
     if corners is not None:
@@ -133,20 +138,20 @@ while True:
 
             # Skip corner points inside beanbag box
             if beanbag_detected:
-                if  (
+                if (
                     beanbag_location[0] <= x <= beanbag_bottom_right[0]
                     and
                     beanbag_location[1] <= y <= beanbag_bottom_right[1]
-                    ):
+                ):
                     continue
 
             # Skip pencil area
             if pencil_detected:
-                if  (
+                if (
                     pencil_location[0] <= x <= pencil_bottom_right[0]
                     and
                     pencil_location[1] <= y <= pencil_bottom_right[1]
-                    ):
+                ):
                     continue
 
             cv2.circle(img, (x, y), 5, (255, 0, 0), -1)
@@ -170,7 +175,7 @@ while True:
                 # Connect near-points
                 if distance <= max_distance:
 
-                     # Skip lines connected to beanbag
+                    # Skip lines connected to beanbag
                     if beanbag_detected:
 
                         point1_in_beanbag = (
@@ -207,52 +212,42 @@ while True:
 
                     cv2.line(img, (x1, y1), (x2, y2), (0, 0, 255), 2)
 
-        # Create blank avoidance mask
-        avoidance_mask = np.zeros_like(gray)
-
-        # Adjustable avoidance radius
-        avoidance_radius = 10
-
         # Fill space around every detected corner
         for corner in corners:
             x, y = corner.ravel()
 
             # Skip beanbag area
             if beanbag_detected:
-                if (beanbag_location[0] <= x <= beanbag_bottom_right[0]
+                if (
+                    beanbag_location[0] <= x <= beanbag_bottom_right[0]
                     and
-                    beanbag_location[1] <= y <= beanbag_bottom_right[1]):
+                    beanbag_location[1] <= y <= beanbag_bottom_right[1]
+                ):
                     continue
 
             # Skip pencil area
             if pencil_detected:
-                if (pencil_location[0] <= x <= pencil_bottom_right[0]
+                if (
+                    pencil_location[0] <= x <= pencil_bottom_right[0]
                     and
-                    pencil_location[1] <= y <= pencil_bottom_right[1]):
+                    pencil_location[1] <= y <= pencil_bottom_right[1]
+                ):
                     continue
 
             cv2.circle(img, (x, y), 4, (0, 0, 255), -1)
+            cv2.circle(avoidance_mask, (x, y), avoidance_radius, 255, -1)
 
     # Display frame
-    cv2.imshow('Frame', img)
+    cv2.imshow("Frame", img)
 
-    ### <<< WEBCAM CONTROLS >>> ###
-    if use_webcam:
+    ### <<< CAMERA CONTROLS >>> ###
 
-        # Press Q to quit
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-
-    ### <<< IMAGE CONTROLS >>> ###
-    else:
-
-        # Wait for key press
-        cv2.waitKey(0)
+    # Press Q to quit
+    if cv2.waitKey(1) & 0xFF == ord("q"):
         break
 
-# Release webcam
-if use_webcam:
-    cap.release()
+# Release camera
+cap.release()
 
 # Close OpenCV windows
 cv2.destroyAllWindows()
