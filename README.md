@@ -12,6 +12,10 @@ Python control software and technical documentation for the Germanna Community C
 
 This project focuses on developing the software used to control and automate the GCC ASME competition robot. Development includes controller-based operation, robot movement and mechanisms, sensor integration, and computer-vision-assisted autonomous behavior.
 
+## Hardware Setup
+
+- [Jetson CSI Camera Setup](docs/Programming/Jetson_CSI_Camera_Setup.md)
+
 ## Project Goals
 
 - Develop controller input handling in Python
