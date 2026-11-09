@@ -34,7 +34,7 @@ sudo apt install python3-opencv v4l-utils
 
 ## Clone and Update the Repository
 
-lone the repository on the Jetson once:
+Clone the repository on the Jetson once:
 
 ```bash
 cd ~
