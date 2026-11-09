@@ -34,6 +34,12 @@ sudo apt install python3-opencv v4l-utils
 
 ## Clone and Update the Repository
 
+lone the repository on the Jetson once:
+
+```bash
+cd ~
+git clone https://github.com/lgebhart/GCC-ASME-Robot-2027.git
+
 ## Run the Camera Script
 
 ## Troubleshooting
