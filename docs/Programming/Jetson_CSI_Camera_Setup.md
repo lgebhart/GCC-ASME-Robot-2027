@@ -16,6 +16,14 @@ The camera sensor used by the Python script is `sensor-id=0`.
 
 ## Enable the CSI Camera
 
+1. Connect the IMX219 camera ribbon cable to the Jetson's CSI connector. With the Jetson powered off, check that the ribbon is fully inserted and secured.
+2. Open the Jetson's application menu and launch **Jetson-IO**.
+3. Select the camera option for the IMX219 camera, then save the configuration and reboot if prompted.
+4. After reboot, check that Linux detects the camera:
+
+   ```bash
+   v4l2-ctl --list-devices
+
 ## Install Software
 
 ## Clone and Update the Repository
