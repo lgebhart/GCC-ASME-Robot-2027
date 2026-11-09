@@ -42,6 +42,13 @@ git clone https://github.com/lgebhart/GCC-ASME-Robot-2027.git
 
 ## Run the Camera Script
 
+The obstacle course script opens the CSI camera with an OpenCV GStreamer pipeline using `sensor-id=0`. The current pipeline requests 1920 × 1080 video at 30 frames per second.
+
+From the repository root, run:
+
+```bash
+python3 src/computer_vision/obstacle_course.py
+
 ## Troubleshooting
 
 ## Notes
