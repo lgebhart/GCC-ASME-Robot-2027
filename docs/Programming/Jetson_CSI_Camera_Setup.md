@@ -61,3 +61,8 @@ Install OpenCV for the system Python:
 sudo apt install python3-opencv
 
 ## Notes
+
+- The camera script is a Python program, not a Bash script. Run it with `python3`.
+- The external monitor, keyboard, and mouse were used during setup and testing. The Jetson still needs its power supply to operate.
+- The current script displays a preview with `cv2.imshow()` and uses **Q** to quit, so it expects a display while running. Headless operation will need a separate change to the script.
+- Setup was verified when the Python program displayed live camera video and printed template-match confidence scores.
