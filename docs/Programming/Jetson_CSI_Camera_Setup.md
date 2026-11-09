@@ -51,4 +51,13 @@ python3 src/computer_vision/obstacle_course.py
 
 ## Troubleshooting
 
+## Troubleshooting
+
+### Python reports `No module named 'cv2'`
+
+Install OpenCV for the system Python:
+
+```bash
+sudo apt install python3-opencv
+
 ## Notes
