@@ -26,6 +26,12 @@ The camera sensor used by the Python script is `sensor-id=0`.
 
 ## Install Software
 
+Install OpenCV and the V4L2 camera tools:
+
+```bash
+sudo apt update
+sudo apt install python3-opencv v4l-utils
+
 ## Clone and Update the Repository
 
 ## Run the Camera Script
