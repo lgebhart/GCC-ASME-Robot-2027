@@ -71,6 +71,13 @@ git pull
 
 Run Git commands from inside the cloned repository.
 
+## Bash Helper Script
+
+The repository includes `scripts/jetson_camera.sh` for common Jetson camera tasks. From the repository root, run one of these commands:
+
+```bash
+bash scripts/jetson_camera.sh install
+
 ## Run the Camera Script
 
 From the repository root, run:
